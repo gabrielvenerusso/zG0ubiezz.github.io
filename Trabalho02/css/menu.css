@@ -102,4 +102,5 @@ td:hover{
 
 .calendar-button:hover{
   background-color: rgb(102, 255, 0);
+  color: black;
 }
