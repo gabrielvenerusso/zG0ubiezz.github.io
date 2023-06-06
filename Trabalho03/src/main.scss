@@ -1,0 +1,89 @@
+// Custom.scss
+// Option A: Include all of Bootstrap
+
+// Include any default variable overrides here (though functions won't be available)
+
+@import "../node_modules/bootstrap/scss/bootstrap";
+
+// Then add additional custom code here
+* {
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+.bg-gray {
+	background-color: #fafbfd;
+}
+
+.bg-dark-gray {
+	background-color: #ecedf0;
+}
+
+.border-none {
+	border: none;
+}
+
+.h-3rem {
+	height: 3rem;
+}
+
+.w-3rem {
+	width: 3rem;
+}
+
+.area-chart {
+	/* Reset */
+	margin: 0;
+	padding: 0;
+	border: 0;
+
+	/* Dimensions */
+	width: 100%;
+	max-width: var(--chart-width, 600px);
+	height: var(--chart-height, 300px);
+}
+
+.area-chart tbody {
+	width: 100%;
+	height: var(--chart-height, 300px);
+
+	/* Layout */
+	display: flex;
+	justify-content: stretch;
+	align-items: stretch;
+	flex-direction: row;
+}
+
+.area-chart tr {
+	position: relative;
+
+	/* Even size items */
+	flex-grow: 1;
+	flex-shrink: 1;
+	flex-basis: 0;
+}
+
+.area-chart td {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+
+	/* Color */
+	background: var(--color, rgba(240, 50, 50, 0.75));
+	clip-path: polygon(
+		0% calc(100% * (1 - var(--start))),
+		100% calc(100% * (1 - var(--end))),
+		100% 100%,
+		0% 100%
+	);
+}
+
+.area-chart td:nth-of-type(1) {
+	--color: #e9efff;
+}
+
+.area-chart td:nth-of-type(2) {
+	--color: #438cfd;
+}
