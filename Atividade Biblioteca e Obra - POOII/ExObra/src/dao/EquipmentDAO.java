@@ -1,6 +1,6 @@
 package dao;
 
-import model.Material;
+import model.Equipment;
 import model.Project;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,10 +9,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MaterialDAO extends BaseDAO {
+public class EquipmentDAO extends BaseDAO {
     public void create() {
         String sql = """
-                create table if not exists material(id_material integer primary key autoincrement, name varchar(255), quantity integer);
+                create table if not exists equipment(id_equipment integer primary key autoincrement, name varchar(255), type varchar(255));
                 """;
         try(Connection con = con();
             PreparedStatement pre = con.prepareStatement(sql)) {
@@ -22,61 +22,61 @@ public class MaterialDAO extends BaseDAO {
         }
     }
 
-    public void insert(Material material) {
+    public void insert(Equipment equipment) {
         String sql = """
-                insert into material(name, quantity) values (?, ?);
+                insert into equipment(name, type) values(?, ?);
                 """;
         try(Connection con = con();
             PreparedStatement pre = con.prepareStatement(sql)) {
-            pre.setString(1, material.getName());
-            pre.setInt(2, material.getQuantity());
+            pre.setString(1, equipment.getName());
+            pre.setString(2, equipment.getType());
             pre.execute();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public void update(Material material) {
+    public void update(Equipment equipment) {
         String sql = """
-                update material set name = ? where id_material = ?;
+                update equipment set name = ? where id_equipment = ?;
                 """;
         try(Connection con = con();
             PreparedStatement pre = con.prepareStatement(sql)) {
-            pre.setString(1, material.getName());
-            pre.setInt(2, material.getId_material());
+            pre.setString(1, equipment.getName());
+            pre.setInt(2, equipment.getId_equipment());
             pre.execute();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public void delete(Material material) {
+    public void delete(Equipment equipment) {
         String sql = """
-                delete from material where id_material = ?;
+                delete from equipment where id_equipment = ?;
                 """;
         try(Connection con = con();
             PreparedStatement pre = con.prepareStatement(sql)) {
-            pre.setInt(1, material.getId_material());
+            pre.setInt(1, equipment.getId_equipment());
             pre.execute();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public List<Material> getAll() {
-        List<Material> list = new ArrayList<>();
+    public List<Equipment> getAll() {
+        List<Equipment> list = new ArrayList<>();
         String sql = """
-                select * from material;
+                select * from equipment;
                 """;
         try(Connection con = con();
             PreparedStatement pre = con.prepareStatement(sql);
             ResultSet rs = pre.executeQuery()) {
             while (rs.next()) {
-                Material material = new Material();
-                material.setId_material(rs.getInt("id_material"));
-                material.setName(rs.getString("name"));
-                material.setQuantity(rs.getInt("quantity"));
-                list.add(material);
+                Equipment equipment = new Equipment();
+                equipment.setId_equipment(rs.getInt("id_equipment"));
+                equipment.setName(rs.getString("name"));
+                equipment.setType(rs.getString("type"));
+                list.add(equipment);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -84,10 +84,10 @@ public class MaterialDAO extends BaseDAO {
         return list;
     }
 
-    public List<Material> materialsPerProject(Project project) throws SQLException {
-        List<Material> list = new ArrayList<>();
+    public List<Equipment> equipmentPerProject(Project project) throws SQLException {
+        List<Equipment> list = new ArrayList<>();
         String sql = """
-                select m.* from material m join material_consumption mc on m.id_material = mc.id_material where mc.id_project = ?
+                select e.* from equipment e join use_equipment ue on e.id_equipment = ue.id_equipment where ue.id_project = ?;
                 """;
         try(Connection con = con();
             PreparedStatement pre = con.prepareStatement(sql);
@@ -95,11 +95,11 @@ public class MaterialDAO extends BaseDAO {
             pre.setInt(1, project.getId_project());
             try (ResultSet rs2 = pre.executeQuery()) {
                 while (rs2.next()) {
-                    Material material = new Material();
-                    material.setId_material(rs.getInt("id_material"));
-                    material.setName(rs.getString("name"));
-                    material.setQuantity(rs.getInt("quantity"));
-                    list.add(material);
+                    Equipment equipment = new Equipment();
+                    equipment.setId_equipment(rs.getInt("id_equipment"));
+                    equipment.setName(rs.getString("name"));
+                    equipment.setType(rs.getString("type"));
+                    list.add(equipment);
                 }
             }
         }

@@ -1,7 +1,7 @@
 package dao;
 
-import model.Material;
 import model.Project;
+import model.Worker;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -9,10 +9,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MaterialDAO extends BaseDAO {
+public class WorkerDAO extends BaseDAO {
     public void create() {
         String sql = """
-                create table if not exists material(id_material integer primary key autoincrement, name varchar(255), quantity integer);
+                create table if not exists worker(id_worker integer primary key autoincrement, name varchar(255), function varchar(255));
                 """;
         try(Connection con = con();
             PreparedStatement pre = con.prepareStatement(sql)) {
@@ -22,61 +22,60 @@ public class MaterialDAO extends BaseDAO {
         }
     }
 
-    public void insert(Material material) {
+    public void insert(Worker worker) {
         String sql = """
-                insert into material(name, quantity) values (?, ?);
+                insert into worker(name, function) values (?, ?);
                 """;
         try(Connection con = con();
             PreparedStatement pre = con.prepareStatement(sql)) {
-            pre.setString(1, material.getName());
-            pre.setInt(2, material.getQuantity());
+            pre.setString(1, worker.getName());
+            pre.setString(2, worker.getFunction());
             pre.execute();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public void update(Material material) {
+    public void update(Worker worker) {
         String sql = """
-                update material set name = ? where id_material = ?;
+                update worker set name where id_worker = ?;
                 """;
         try(Connection con = con();
             PreparedStatement pre = con.prepareStatement(sql)) {
-            pre.setString(1, material.getName());
-            pre.setInt(2, material.getId_material());
+            pre.setInt(1, worker.getId_worker());
             pre.execute();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public void delete(Material material) {
+    public void delete(Worker worker) {
         String sql = """
-                delete from material where id_material = ?;
+                delete from worker where id_worker = ?;
                 """;
         try(Connection con = con();
             PreparedStatement pre = con.prepareStatement(sql)) {
-            pre.setInt(1, material.getId_material());
+            pre.setInt(1, worker.getId_worker());
             pre.execute();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public List<Material> getAll() {
-        List<Material> list = new ArrayList<>();
+    public List<Worker> getAll() {
+        List<Worker> list = new ArrayList<>();
         String sql = """
-                select * from material;
+                select * from worker;
                 """;
         try(Connection con = con();
             PreparedStatement pre = con.prepareStatement(sql);
             ResultSet rs = pre.executeQuery()) {
             while (rs.next()) {
-                Material material = new Material();
-                material.setId_material(rs.getInt("id_material"));
-                material.setName(rs.getString("name"));
-                material.setQuantity(rs.getInt("quantity"));
-                list.add(material);
+                Worker worker = new Worker();
+                worker.setId_worker(rs.getInt("id_worker"));
+                worker.setName(rs.getString("name"));
+                worker.setFunction(rs.getString("function"));
+                list.add(worker);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -84,10 +83,10 @@ public class MaterialDAO extends BaseDAO {
         return list;
     }
 
-    public List<Material> materialsPerProject(Project project) throws SQLException {
-        List<Material> list = new ArrayList<>();
+    public List<Worker> workersPerProject(Project project) throws SQLException {
+        List<Worker> list = new ArrayList<>();
         String sql = """
-                select m.* from material m join material_consumption mc on m.id_material = mc.id_material where mc.id_project = ?
+                select w.* from worker w join worker_allocation wa on w.id_worker = wa.id_Worker where wa.id_project = ?
                 """;
         try(Connection con = con();
             PreparedStatement pre = con.prepareStatement(sql);
@@ -95,11 +94,11 @@ public class MaterialDAO extends BaseDAO {
             pre.setInt(1, project.getId_project());
             try (ResultSet rs2 = pre.executeQuery()) {
                 while (rs2.next()) {
-                    Material material = new Material();
-                    material.setId_material(rs.getInt("id_material"));
-                    material.setName(rs.getString("name"));
-                    material.setQuantity(rs.getInt("quantity"));
-                    list.add(material);
+                    Worker worker = new Worker();
+                    worker.setId_worker(rs.getInt("id_worker"));
+                    worker.setName(rs.getString("name"));
+                    worker.setFunction(rs.getString("function"));
+                    list.add(worker);
                 }
             }
         }

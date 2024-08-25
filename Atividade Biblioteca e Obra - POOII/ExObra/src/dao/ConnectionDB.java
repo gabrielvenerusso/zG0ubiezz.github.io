@@ -1,4 +1,5 @@
 package dao;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -17,9 +18,8 @@ public class ConnectionDB {
     }
 
     public Connection getConnection() throws SQLException {
-        String url = "jdbc:sqlite:meu_banco.db";
+        String url = "jdbc:sqlite:my_db.db";
         Connection con = DriverManager.getConnection(url);
         return con;
     }
-
 }
